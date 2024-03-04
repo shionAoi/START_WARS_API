@@ -1,0 +1,27 @@
+{
+  "name": "start_wars_api",
+  "version": "1.0.0",
+  "description": "API to consult swapi.py4e.com in spanish",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/shionAoi/START_WARS_API.git"
+  },
+  "author": "Javier Cornejo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shionAoi/START_WARS_API/issues"
+  },
+  "homepage": "https://github.com/shionAoi/START_WARS_API#readme",
+  "workspaces": [
+    "fn_star_wars_post",
+    "fn_star_wars_get"
+  ],
+  "devDependencies": {
+    "serverless-localstack": "^1.2.0",
+    "serverless-offline": "^13.3.3"
+  }
+}

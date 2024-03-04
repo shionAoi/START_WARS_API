@@ -1,0 +1,22 @@
+{
+  "name": "@star_wars_api/fn_star_wars_get",
+  "version": "1.0.0",
+  "description": "API GET",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Javier Cornejo",
+  "license": "MIT",
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.3.1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.525.0",
+    "@aws-sdk/lib-dynamodb": "^3.525.0",
+    "axios": "^1.6.7",
+    "express": "^4.18.3",
+    "serverless-http": "^3.2.0",
+    "uuid": "^9.0.1"
+  }
+}
