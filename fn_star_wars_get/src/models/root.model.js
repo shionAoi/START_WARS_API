@@ -1,4 +1,4 @@
-const { URL_SWAPI } = require("../utils/config.js");
+const { URL_SWAPI, AXIOS_DEFAULT_TIME } = require("../utils/config.js");
 
 const axios = require("axios");
 const { LanguageNotSupported } = require("../utils/errors.js");
@@ -12,11 +12,16 @@ class RootDAO {
         try {
             console.log("Get default routes from star wars api");
             const response = await axios.get(URL_SWAPI, {
+                timeout: AXIOS_DEFAULT_TIME,
                 validateStatus: (status) => {
                     return status === 200;
                 },
             });
-            console.log(`Success getting response from api ${JSON.stringify(response.data)}`);
+            console.log(
+                `Success getting response from api ${JSON.stringify(
+                    response.data
+                )}`
+            );
             let premise;
             switch (this.language) {
                 case "es_PE":
@@ -26,7 +31,7 @@ class RootDAO {
                         peliculas: `${global.API_GATEWAY_URL}/films`,
                         especies: `${global.API_GATEWAY_URL}/species`,
                         vehiculos: `${global.API_GATEWAY_URL}/vehicles`,
-                        naves: `${global.API_GATEWAY_URL}/starship`,
+                        naves: `${global.API_GATEWAY_URL}/starships`,
                     };
                     break;
                 case "en_US":
@@ -36,7 +41,7 @@ class RootDAO {
                         films: `${global.API_GATEWAY_URL}/films`,
                         species: `${global.API_GATEWAY_URL}/species`,
                         vehicles: `${global.API_GATEWAY_URL}/vehicles`,
-                        starship: `${global.API_GATEWAY_URL}/starship`,
+                        starship: `${global.API_GATEWAY_URL}/starships`,
                     };
                     break;
                 default:

@@ -4,7 +4,7 @@
   "description": "API to consult swapi.py4e.com in spanish",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "jest"
   },
   "repository": {
     "type": "git",

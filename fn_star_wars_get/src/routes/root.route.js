@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const RootService = require("../services/root.service.js");
+const { AxiosError } = require("axios");
 
 router.get("/", async (req, res) => {
     try {

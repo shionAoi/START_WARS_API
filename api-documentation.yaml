@@ -1,0 +1,586 @@
+openapi: 3.0.3
+info:
+  title: STAR WARS API
+  description: |-
+    This is an API to get the same resources as SWAPI but transalating fields.
+  contact:
+    email: javier.jail.cornejo@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:4110
+tags:
+  - name: root
+    description: All available resources within the API.
+  - name: people
+    description: People resource
+  - name: films
+    description: Films resource
+  - name: starships
+    description: StarShips resource
+  - name: vehicles
+    description: Vehicles resource
+  - name: species
+    description: Species resource
+  - name: planets
+    description: Planets resource
+    
+paths:
+  /:
+    get:
+      tags:
+        - root
+      summary: Routes of API
+      description: The Root resource provides information on all available resources within the API.
+      operationId: rootResource
+      parameters:
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+            default: es_PE
+            enum:
+              - es_PE
+              - en_US
+          required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseRoot'
+        '400':
+          description: Language not Supported
+          
+  /people/{personId}:
+    get:
+      tags:
+        - people
+      summary: Finds a person by ID
+      description: Get information of person by ID
+      operationId: findPersonByID
+      parameters:
+        - name: personId
+          in: path
+          description: ID of person to return
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+            default: es_PE
+            enum:
+              - es_PE
+              - en_US
+          required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SuccessResponseGetPerson'
+        '404':
+          description: Not Found
+        '400':
+          description: Language not Supported
+  
+  /people:
+    get:
+      tags:
+        - people
+      summary: Get all people with default pagination
+      description: Get all people with pagination
+      operationId: getPeople
+      parameters:
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+            default: es_PE
+            enum:
+              - es_PE
+              - en_US
+          required: true
+        - in: query
+          name: lastKey
+          schema:
+            type: string
+          description: The last key of the last item returned by the API in previous response in field next_key
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseGetPeople'
+        '400':
+          description: Language not Supported
+    post:
+      tags:
+        - people
+      summary: Add a new person to the API
+      description: Add a new person to the API
+      operationId: addPerson
+      parameters:
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+            default: es_PE
+            enum:
+              - es_PE
+              - en_US
+          required: true
+      requestBody:
+        $ref: '#/components/requestBodies/Person'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseGetPerson'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+          
+          
+  /films/{filmId}:
+    get:
+      tags:
+        - films
+      summary: Finds a film by ID
+      description: Get information of film by ID
+      operationId: findFilmByID
+      parameters:
+        - name: filmId
+          in: path
+          description: ID of film to return
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+            default: es_PE
+            enum:
+              - es_PE
+              - en_US
+          required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SuccessResponseGetFilm'
+        '404':
+          description: Not Found
+        '400':
+          description: Language not Supported
+  
+  /films:
+    get:
+      tags:
+        - films
+      summary: Get all films with default pagination
+      description: Get all films with pagination
+      operationId: getFilms
+      parameters:
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+            default: es_PE
+            enum:
+              - es_PE
+              - en_US
+          required: true
+        - in: query
+          name: lastKey
+          schema:
+            type: string
+          description: The last key of the last item returned by the API in previous response in field next_key
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseGetFilms'
+        '400':
+          description: Language not Supported
+    post:
+      tags:
+        - films
+      summary: Add a new film to the API
+      description: Add a new film to the API
+      operationId: addFilm
+      parameters:
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+            default: es_PE
+            enum:
+              - es_PE
+              - en_US
+          required: true
+      requestBody:
+        $ref: '#/components/requestBodies/Film'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseGetFilm'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+
+
+components:
+  schemas:
+    Person:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        height:
+          type: string
+        mass:
+          type: string
+        hair_color:
+          type: string
+        skin_color:
+          type: string
+        eye_color:
+          type: string
+        birth_year:
+          type: string
+        gender:
+          type: string
+        homeworld:
+          type: string
+        films:
+          type: array
+          items:
+            type: string
+        species:
+          type: array
+          items:
+            type: string
+        vehicles:
+          type: array
+          items:
+            type: string
+        starships:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+          
+    Film:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        episode_id:
+          type: string
+        opening_crawl:
+          type: string
+        director:
+          type: string
+        producer:
+          type: string
+        release_date:
+          type: string
+        characters:
+          type: string
+        planets:
+          type: array
+          items:
+            type: string
+        species:
+          type: array
+          items:
+            type: string
+        vehicles:
+          type: array
+          items:
+            type: string
+        starships:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+    
+    PersonSpanish:
+      type: object
+      properties:
+        object_id:
+          type: string
+          description: Id of item in API
+        nombre:
+          type: string
+        estatura:
+          type: string
+        peso:
+          type: string
+        color_de_pelo:
+          type: string
+        color_de_piel:
+          type: string
+        color_de_ojo:
+          type: string
+        nacimiento:
+          type: string
+        genero:
+          type: string
+        mundo:
+          type: string
+        peliculas:
+          type: array
+          items:
+            type: string
+        especies:
+          type: array
+          items:
+            type: string
+        vehiculos:
+          type: array
+          items:
+            type: string
+        naves:
+          type: array
+          items:
+            type: string
+        creado_en:
+          type: string
+          format: date-time
+        editado_en:
+          type: string
+          format: date-time
+        url:
+          type: string
+          
+    FilmSpanish:
+      type: object
+      properties:
+        object_id:
+          type: string
+          description: Id of item in API
+        titulo:
+          type: string
+        episodio_id:
+          type: string
+        apertura:
+          type: string
+        director:
+          type: string
+        productor:
+          type: string
+        fecha_de_estreno:
+          type: string
+        personajes:
+          type: string
+        planetas:
+          type: array
+          items:
+            type: string
+        especies:
+          type: array
+          items:
+            type: string
+        vehiculos:
+          type: array
+          items:
+            type: string
+        naves:
+          type: array
+          items:
+            type: string
+        creado_en:
+          type: string
+        editado_en:
+          type: string
+        url:
+          type: string
+          
+    Meta:
+      type: object
+      description: Relevant information of the response
+      properties:
+        default_language:
+                  type: string
+                  description: Language of response
+                  enum:
+                    - es_PE
+                    - en_US
+          
+  
+    SuccessResponseRoot:
+      description: Success operation
+      type: object
+      properties:
+        success:
+          type: string
+          description: State of operation
+          example: "true"
+        response:
+          type: object
+          properties:
+            personas:
+              type: string
+              description: URL to request people
+              example: http://localhos:4110/people
+            planetas:
+              type: string
+              description: URL to request planets
+              example: http://localhos:4110/planets
+            peliculas:
+              type: string
+              description: URL to request films
+              example: http://localhos:4110/films
+            especies:
+              type: string
+              description: URL to request species
+              example: http://localhos:4110/species
+            vehiculos:
+              type: string
+              description: URL to request vehicles
+              example: http://localhos:4110/vehicles
+            naves:
+              type: string
+              description: URL to request starships
+              example: http://localhos:4110/starships
+            meta:
+              allOf:
+                - $ref: '#/components/schemas/Meta'
+                - type: object
+                  description: Relevant information of the response
+                  properties:
+                    data_from:
+                      type: object
+                      description: Consulted SWAPI information
+                      properties:
+                        api:
+                          type: string
+                          description: Url of SWAPI
+                          example: https://swapi.py4e.com/api
+                        description:
+                          type: string
+                          example: Star Wars API
+                        routes:
+                          type: object
+                          description: Consulted routes of SWAPI
+                      
+    SuccessResponseGetPeople:
+      type: object
+      properties:
+        success:
+          type: string
+          description: State of operation
+          example: "true"
+        response:
+          allOf:
+            - type: object
+              properties:
+                people:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PersonSpanish'
+            - type: object
+              properties:
+                meta:
+                  $ref: '#/components/schemas/Meta'
+                  
+    SuccessResponseGetPerson:
+      type: object
+      properties:
+        success:
+          type: string
+          description: State of operation
+          example: "true"
+        response:
+          allOf:
+            - $ref: '#/components/schemas/PersonSpanish'
+            - type: object
+              properties:
+                meta:
+                  $ref: '#/components/schemas/Meta'
+                  
+    SuccessResponseGetFilms:
+      type: object
+      properties:
+        success:
+          type: string
+          description: State of operation
+          example: "true"
+        response:
+          allOf:
+            - type: object
+              properties:
+                films:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/FilmSpanish'
+            - type: object
+              properties:
+                meta:
+                  $ref: '#/components/schemas/Meta'
+                  
+    SuccessResponseGetFilm:
+      type: object
+      properties:
+        success:
+          type: string
+          description: State of operation
+          example: "true"
+        response:
+          allOf:
+            - $ref: '#/components/schemas/FilmSpanish'
+            - type: object
+              properties:
+                meta:
+                  $ref: '#/components/schemas/Meta'
+        
+  
+  requestBodies:
+    Person:
+      description: Person object that needs to be added to the API
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Person'
+    Film:
+      description: Fim object that needs to be added to the API
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Film'
+    # UserArray:
+    #   description: List of user object
+    #   content:
+    #     application/json:
+    #       schema:
+    #         type: array
+    #         items:
+    #           $ref: '#/components/schemas/User'

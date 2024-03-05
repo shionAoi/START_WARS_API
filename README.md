@@ -93,7 +93,7 @@ Ejecuta el archivo **ci-deploy.sh**
 Para correr los tests usar el siguiente comando
 
 ```bash
-  npm run test
+  npm run test -ws
 ```
 
 

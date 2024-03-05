@@ -2,14 +2,16 @@
   "name": "@star_wars_api/fn_star_wars_get",
   "version": "1.0.0",
   "description": "API GET",
-  "main": "app.js",
+  "main": "./src/index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "URL_SWAPI=https://swapi.py4e.com/api DYNAMO_REGION=us-east-1 DEFAULT_PAGINATION_ITEMS=20 STAR_WARS_TABLE_DB=star_wars_table NODE_ENV=test jest --config ./tests/jest.config.json"
   },
   "author": "Javier Cornejo",
   "license": "MIT",
   "devDependencies": {
-    "@cucumber/cucumber": "^10.3.1"
+    "@cucumber/cucumber": "^10.3.1",
+    "@shelf/jest-dynamodb": "^3.4.4",
+    "jest": "^29.7.0"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.525.0",

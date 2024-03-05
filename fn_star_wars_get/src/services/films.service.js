@@ -31,6 +31,7 @@ class FilmsService {
 
     async processFilms(key) {
         let results = [];
+        let success = "false";
         try {
             const { accumulated, lastKey, count } =
                 await this.films_dao.getAllFilms(
@@ -52,9 +53,10 @@ class FilmsService {
                         }
                     })
                 );
+                success = "true"
             }
             return {
-                success: true,
+                success,
                 response: {
                     films: results,
                     meta: {

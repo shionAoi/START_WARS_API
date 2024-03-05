@@ -45,8 +45,8 @@ app.use((error, req, res, next) => {
     return res.status(500).json({ error: error.message });
 });
 
-// app.listen(4110, () => {
-//     console.log(`listening on port ${4110}`);
-// });
+app.listen(4110, () => {
+    console.log(`listening on port ${4110}`);
+});
 
 module.exports.handler = serverless(app);

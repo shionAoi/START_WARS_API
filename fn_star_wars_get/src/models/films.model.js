@@ -98,10 +98,10 @@ class FilmsDAO {
 
     static async translateFilm(film, language) {
         delete film.schema_name;
-        delete film.object_id;
         switch (language) {
             case "es_PE":
                 return {
+                    object_id: film.object_id,
                     titulo: film.title,
                     episodio_id: film.episode_id,
                     apertura: film.opening_crawl,

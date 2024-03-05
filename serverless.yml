@@ -40,11 +40,12 @@ functions:
     handler: fn_star_wars_get/src/index.handler
     description: Lambda to get resources from API star wars
     memorySize: 128
-    timeout: 5
+    timeout: 10
     environment:
       URL_SWAPI: "https://swapi.py4e.com/api"
       DYNAMO_REGION: "us-east-1"
       DEFAULT_PAGINATION_ITEMS: "20"
+      AXIOS_DEFAULT_TIME: "7000"
       STAR_WARS_TABLE_DB: ${self:custom.dynamoTableName}
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
     package:

@@ -31,6 +31,7 @@ class PeopleService {
 
     async processPeople(key) {
         let results = [];
+        let success = "false";
         try {
             const { accumulated, lastKey, count } =
                 await this.people_dao.getAllPeople(
@@ -52,9 +53,10 @@ class PeopleService {
                         }
                     })
                 );
+                success = "true";
             }
             return {
-                success: true,
+                success,
                 response: {
                     people: results,
                     meta: {
