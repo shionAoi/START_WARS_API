@@ -72,6 +72,38 @@ functions:
           path: /films/{filmId}
           method: get
           cors: true
+      - http:
+          path: /starships
+          method: get
+          cors: true
+      - http:
+          path: /starships/{starshipId}
+          method: get
+          cors: true
+      - http:
+          path: /vehicles
+          method: get
+          cors: true
+      - http:
+          path: /vehicles/{vehicleId}
+          method: get
+          cors: true
+      - http:
+          path: /species
+          method: get
+          cors: true
+      - http:
+          path: /species/{specieId}
+          method: get
+          cors: true
+      - http:
+          path: /planets
+          method: get
+          cors: true
+      - http:
+          path: /planets/{planetId}
+          method: get
+          cors: true
 
 resources:
   Resources:

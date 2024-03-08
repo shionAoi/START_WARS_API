@@ -1,17 +1,17 @@
-const FilmsDAO = require("../models/films.model");
+const SpeciesDAO = require("../models/species.model");
 const { DEFAULT_PAGINATION_ITEMS } = require("../utils/config");
 
-class FilmsService {
+class SpeciesService {
     constructor(db_client, language) {
-        this.films_dao = new FilmsDAO(db_client);
+        this.species_dao = new SpeciesDAO(db_client);
         this.language = language;
     }
 
-    async processFilm(film_id) {
+    async processSpecie(specie_id) {
         try {
-            const film = await this.films_dao.getFilmById(film_id);
-            const translated = await FilmsDAO.translateFilm(
-                film,
+            const specie = await this.species_dao.getSpecieById(specie_id);
+            const translated = await SpeciesDAO.translateSpecie(
+                specie,
                 this.language
             );
             return {
@@ -24,17 +24,17 @@ class FilmsService {
                 },
             };
         } catch (error) {
-            console.error(`Could not get film. ${error}`);
+            console.error(`Could not get specie. ${error}`);
             throw error;
         }
     }
 
-    async processFilms(key) {
+    async processSpecies(key) {
         let results = [];
         let success = "false";
         try {
             const { accumulated, lastKey, count } =
-                await this.films_dao.getAllFilms(
+                await this.species_dao.getAllSpecies(
                     key,
                     DEFAULT_PAGINATION_ITEMS
                 );
@@ -42,7 +42,7 @@ class FilmsService {
                 await Promise.all(
                     accumulated.map(async (item) => {
                         try {
-                            const aux = await FilmsDAO.translateFilm(
+                            const aux = await SpeciesDAO.translateSpecie(
                                 item,
                                 this.language
                             );
@@ -53,12 +53,12 @@ class FilmsService {
                         }
                     })
                 );
-                success = "true"
+                success = "true";
             }
             return {
                 success,
                 response: {
-                    films: results,
+                    species: results,
                     meta: {
                         total_items: count,
                         next_key: lastKey,
@@ -69,10 +69,10 @@ class FilmsService {
                 },
             };
         } catch (error) {
-            console.error(`Could not get list of films. ${error}`);
+            console.error(`Could not get list of species. ${error}`);
             throw error;
         }
     }
 }
 
-module.exports = FilmsService;
+module.exports = SpeciesService;

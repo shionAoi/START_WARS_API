@@ -8,10 +8,6 @@ const { DYNAMO_REGION } = require("./utils/config.js");
 const getRootRoute = require("./routes/root.route.js");
 const getPeople = require("./routes/people.route.js");
 const getFilms = require("./routes/films.route.js");
-const getStarShips = require("./routes/starships.route.js");
-const getVehicles = require("./routes/vehicles.route.js");
-const getSpecies = require("./routes/species.route.js");
-const getPlanets = require("./routes/planets.route.js");
 
 let dynamodb_client;
 
@@ -44,10 +40,6 @@ app.use((req, res, next) => {
 app.use("/", getRootRoute);
 app.use("/people", getPeople);
 app.use("/films", getFilms);
-app.use("/starships", getStarShips);
-app.use("/vehicles", getVehicles);
-app.use("/species", getSpecies);
-app.use("/planets", getPlanets);
 
 app.use((error, req, res, next) => {
     return res.status(500).json({ error: error.message });

@@ -6,8 +6,7 @@ const {
     STAR_WARS_TABLE_DB,
     AXIOS_DEFAULT_TIME,
 } = require("../utils/config.js");
-const ConsultsDynamoDB = require("../utils/dynamodb.client.js");
-const ConsultsAxios = require("../utils/axios.client.js");
+const ConsultsDynamoDB = require("../utils/consults.dynamo.js");
 
 class StarShipsDAO {
     constructor(db_client) {
@@ -37,51 +36,63 @@ class StarShipsDAO {
             // Search in database
             const item = await this.dynamo_commander.getItemById(id);
             if (item) {
-                console.log("Starship found in DB");
                 return item;
             } else {
                 console.log("Getting starship from API. Not in database");
                 // If not in database consult to api star wars
-                const object_swapi = await ConsultsAxios.getCommand(`${URL_SWAPI}/starships/${id}`);
+                const response = await axios.get(
+                    `${URL_SWAPI}/starships/${id}`,
+                    {
+                        timeout: AXIOS_DEFAULT_TIME,
+                        validateStatus: (status) => {
+                            return status === 200;
+                        },
+                    }
+                );
+                console.log(
+                    `Success getting response from api ${JSON.stringify(
+                        response.data
+                    )}`
+                );
                 // Translate result to put it in db
                 const starship = {
                     schema_name: "starships",
                     object_id: `${id}`,
-                    name: object_swapi?.name ? object_swapi["name"] : null,
-                    model: object_swapi?.model ? object_swapi["model"] : null,
-                    starship_class: object_swapi?.starship_class
-                        ? object_swapi["starship_class"]
+                    name: response.data?.name ? response.data["name"] : null,
+                    model: response.data?.model ? response.data["model"] : null,
+                    starship_class: response.data?.starship_class
+                        ? response.data["starship_class"]
                         : null,
-                    manufacturer: object_swapi?.manufacturer
-                        ? object_swapi["manufacturer"]
+                    manufacturer: response.data?.manufacturer
+                        ? response.data["manufacturer"]
                         : null,
-                    cost_in_credits: object_swapi?.cost_in_credits
-                        ? object_swapi["cost_in_credits"]
+                    cost_in_credits: response.data?.cost_in_credits
+                        ? response.data["cost_in_credits"]
                         : null,
-                    length: object_swapi?.length
-                        ? object_swapi["length"]
+                    length: response.data?.length
+                        ? response.data["length"]
                         : null,
-                    crew: object_swapi?.crew ? object_swapi["crew"] : null,
-                    passengers: object_swapi?.passengers
-                        ? object_swapi["passengers"]
+                    crew: response.data?.crew ? response.data["crew"] : null,
+                    passengers: response.data?.passengers
+                        ? response.data["passengers"]
                         : null,
-                    max_atmosphering_speed: object_swapi
+                    max_atmosphering_speed: response.data
                         ?.max_atmosphering_speed
-                        ? object_swapi["max_atmosphering_speed"]
+                        ? response.data["max_atmosphering_speed"]
                         : null,
-                    hyperdrive_rating: object_swapi?.hyperdrive_rating
-                        ? object_swapi["hyperdrive_rating"]
+                    hyperdrive_rating: response.data?.hyperdrive_rating
+                        ? response.data["hyperdrive_rating"]
                         : null,
-                    MGLT: object_swapi?.MGLT ? object_swapi["MGLT"] : null,
-                    cargo_capacity: object_swapi?.cargo_capacity
-                        ? object_swapi["cargo_capacity"]
+                    MGLT: response.data?.MGLT ? response.data["MGLT"] : null,
+                    cargo_capacity: response.data?.cargo_capacity
+                        ? response.data["cargo_capacity"]
                         : null,
-                    consumables: object_swapi?.consumables
-                        ? object_swapi["consumables"]
+                    consumables: response.data?.consumables
+                        ? response.data["consumables"]
                         : null,
-                    films: object_swapi?.films ? object_swapi["films"] : [],
-                    pilots: object_swapi?.pilots
-                        ? object_swapi["pilots"]
+                    films: response.data?.films ? response.data["films"] : [],
+                    pilots: response.data?.pilots
+                        ? response.data["pilots"]
                         : [],
                     created: new Date().toISOString(),
                     edited: new Date().toISOString(),
@@ -103,22 +114,19 @@ class StarShipsDAO {
         switch (language) {
             case "es_PE":
                 return {
-                    object_id: starship.object_id,
                     nombre: starship.name,
-                    modelo: starship.model,
-                    clase_de_nave: starship.starship_class,
-                    fabricante: starship.manufacturer,
-                    costo: starship.cost_in_credits,
-                    longitud: starship.length,
-                    tripulantes: starship.crew,
-                    pasajeros: starship.passengers,
-                    velocidad_atmosferica_maxima: starship.max_atmosphering_speed,
-                    calificacion_de_hiperpropulsor: starship.hyperdrive_rating,
-                    MGLT: starship.MGLT,
-                    capacidad_de_carga: starship.cargo_capacity,
-                    consumibles: starship.consumables,
+                    estatura: starship.height,
+                    peso: starship.mass,
+                    color_de_pelo: starship.hair_color,
+                    color_de_piel: starship.skin_color,
+                    color_de_ojo: starship.eye_color,
+                    nacimiento: starship.birth_year,
+                    genero: starship.gender,
+                    mundo: starship.homeworld,
                     peliculas: starship.films,
-                    pilotos: starship.pilots,
+                    especies: starship.species,
+                    vehiculos: starship.vehicles,
+                    naves: starship.starships,
                     creado_en: starship.created,
                     editado_en: starship.edited,
                     url: starship.url,

@@ -1,16 +1,16 @@
 const express = require("express");
-const PeopleService = require("../services/people.service");
 const { LanguageNotSupported, ResourceNotFoundExternalService } = require("../utils/errors");
+const StarShipsService = require("../services/starships.service");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
     try {
-        console.log("Route to get people");
-        const peopleService = new PeopleService(
+        console.log("Route to get starship");
+        const starshipService = new StarShipsService(
             req.app.get("db_client"),
             req.app.get("language")
         );
-        const converted = await peopleService.processPeople(req.query.lastKey);
+        const converted = await starshipService.processStarShips(req.query.lastKey);
         res.json(converted);
     } catch (error) {
         console.error(error);
@@ -22,15 +22,15 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:personId", async (req, res) => {
+router.get("/:starshipId", async (req, res) => {
     try {
-        console.log("Route to get person by Id");
-        const peopleService = new PeopleService(
+        console.log("Route to get starship by Id");
+        const starshipService = new StarShipsService(
             req.app.get("db_client"),
             req.app.get("language")
         );
-        const converted = await peopleService.processPerson(
-            req.params.personId
+        const converted = await starshipService.processStarShip(
+            req.params.starshipId
         );
         res.json(converted);
     } catch (error) {

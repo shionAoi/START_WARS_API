@@ -5,6 +5,14 @@ class LanguageNotSupported extends Error {
     }
 }
 
+class ResourceNotFoundExternalService extends Error{
+    constructor(message) {
+        super(message);
+        this.name = "ResourceNotFoundExternalService";
+    }
+}
+
 module.exports = {
     LanguageNotSupported,
+    ResourceNotFoundExternalService
 };

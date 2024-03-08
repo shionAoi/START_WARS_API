@@ -1,17 +1,17 @@
-const FilmsDAO = require("../models/films.model");
+const StarShipsDAO = require("../models/starships.model");
 const { DEFAULT_PAGINATION_ITEMS } = require("../utils/config");
 
-class FilmsService {
+class StarShipsService {
     constructor(db_client, language) {
-        this.films_dao = new FilmsDAO(db_client);
+        this.starship_dao = new StarShipsDAO(db_client);
         this.language = language;
     }
 
-    async processFilm(film_id) {
+    async processStarShip(starship_id) {
         try {
-            const film = await this.films_dao.getFilmById(film_id);
-            const translated = await FilmsDAO.translateFilm(
-                film,
+            const starship = await this.starship_dao.getStarShipById(starship_id);
+            const translated = await StarShipsDAO.translateStarShip(
+                starship,
                 this.language
             );
             return {
@@ -24,17 +24,17 @@ class FilmsService {
                 },
             };
         } catch (error) {
-            console.error(`Could not get film. ${error}`);
+            console.error(`Could not get starship. ${error}`);
             throw error;
         }
     }
 
-    async processFilms(key) {
+    async processStarShips(key) {
         let results = [];
         let success = "false";
         try {
             const { accumulated, lastKey, count } =
-                await this.films_dao.getAllFilms(
+                await this.starship_dao.getAllStarShips(
                     key,
                     DEFAULT_PAGINATION_ITEMS
                 );
@@ -42,7 +42,7 @@ class FilmsService {
                 await Promise.all(
                     accumulated.map(async (item) => {
                         try {
-                            const aux = await FilmsDAO.translateFilm(
+                            const aux = await StarShipsDAO.translateStarShip(
                                 item,
                                 this.language
                             );
@@ -53,12 +53,12 @@ class FilmsService {
                         }
                     })
                 );
-                success = "true"
+                success = "true";
             }
             return {
                 success,
                 response: {
-                    films: results,
+                    starships: results,
                     meta: {
                         total_items: count,
                         next_key: lastKey,
@@ -69,10 +69,10 @@ class FilmsService {
                 },
             };
         } catch (error) {
-            console.error(`Could not get list of films. ${error}`);
+            console.error(`Could not get list of starships. ${error}`);
             throw error;
         }
     }
 }
 
-module.exports = FilmsService;
+module.exports = StarShipsService;

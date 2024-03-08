@@ -1,7 +1,7 @@
 const { DynamoDBDocumentClient } = require("@aws-sdk/lib-dynamodb");
 const ConsultsDynamoDB = require("../../src/utils/consults.dynamo");
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { STAR_WARS_TABLE_DB } = require("../../src/utils/config");
+const { STAR_WARS_TABLE_DB } = require("../../../src/utils/config");
 
 describe("ConsultsDynamoDB", () => {
     let consultsDB;

@@ -1,6 +1,7 @@
 const express = require("express");
 const PeopleService = require("../services/people.service");
-const { LanguageNotSupported, ResourceNotFoundExternalService } = require("../utils/errors");
+const { LanguageNotSupported } = require("../utils/errors");
+const { AxiosError } = require("axios");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -37,7 +38,7 @@ router.get("/:personId", async (req, res) => {
         console.error(error);
         if (error instanceof LanguageNotSupported) {
             res.status(400).json({ error: "Language not Supported" });
-        } else if (error instanceof ResourceNotFoundExternalService) {
+        } else if (error instanceof AxiosError) {
             res.status(404).json({ error: "Not Found" });
         } else {
             res.status(500).json({ error: "Internal Server Error" });

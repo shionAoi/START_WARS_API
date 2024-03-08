@@ -1,11 +1,12 @@
 const { LanguageNotSupported } = require("../utils/errors.js");
+const axios = require("axios");
 
 const {
     URL_SWAPI,
     STAR_WARS_TABLE_DB,
+    AXIOS_DEFAULT_TIME,
 } = require("../utils/config.js");
-const ConsultsDynamoDB = require("../utils/dynamodb.client.js");
-const ConsultsAxios = require("../utils/axios.client.js");
+const ConsultsDynamoDB = require("../utils/consults.dynamo.js");
 
 class PeopleDAO {
     constructor(db_client) {
@@ -35,48 +36,57 @@ class PeopleDAO {
             // Search in database
             const item = await this.dynamo_commander.getItemById(id);
             if (item) {
-                console.log("Person found in DB");
                 return item;
             } else {
                 console.log("Getting person from API. Not in database");
-                // If not in database search in api star wars
-                const object_swapi = await ConsultsAxios.getCommand(`${URL_SWAPI}/people/${id}`);
+                // If not in database consult to api star wars
+                const response = await axios.get(`${URL_SWAPI}/people/${id}`, {
+                    timeout: AXIOS_DEFAULT_TIME,
+                    validateStatus: (status) => {
+                        return status === 200;
+                    },
+                });
+                console.log(
+                    `Success getting response from api ${JSON.stringify(
+                        response.data
+                    )}`
+                );
                 // Translate result to put it in db
                 const person = {
                     schema_name: "people",
                     object_id: `${id}`,
-                    name: object_swapi?.name ? object_swapi["name"] : null,
-                    height: object_swapi?.height
-                        ? object_swapi["height"]
+                    name: response.data?.name ? response.data["name"] : null,
+                    height: response.data?.height
+                        ? response.data["height"]
                         : null,
-                    mass: object_swapi?.mass ? object_swapi["mass"] : null,
-                    hair_color: object_swapi?.hair_color
-                        ? object_swapi["hair_color"]
+                    mass: response.data?.mass ? response.data["mass"] : null,
+                    hair_color: response.data?.hair_color
+                        ? response.data["hair_color"]
                         : null,
-                    skin_color: object_swapi?.skin_color
-                        ? object_swapi["skin_color"]
+                    skin_color: response.data?.skin_color
+                        ? response.data["skin_color"]
                         : null,
-                    eye_color: object_swapi?.eye_color
-                        ? object_swapi["eye_color"]
+                    eye_color: response.data?.eye_color
+                        ? response.data["eye_color"]
                         : null,
-                    birth_year: object_swapi?.birth_year
-                        ? object_swapi["birth_year"]
+                    birth_year: response.data?.birth_year
+                        ? response.data["birth_year"]
                         : null,
-                    gender: object_swapi?.gender
-                        ? object_swapi["gender"]
+                    gender: response.data?.gender
+                        ? response.data["gender"]
                         : null,
-                    homeworld: object_swapi?.homeworld
-                        ? object_swapi["homeworld"]
+                    homeworld: response.data?.homeworld
+                        ? response.data["homeworld"]
                         : null,
-                    films: object_swapi?.films ? object_swapi["films"] : [],
-                    species: object_swapi?.species
-                        ? object_swapi["species"]
+                    films: response.data?.films ? response.data["films"] : [],
+                    species: response.data?.species
+                        ? response.data["species"]
                         : [],
-                    vehicles: object_swapi?.vehicles
-                        ? object_swapi["vehicles"]
+                    vehicles: response.data?.vehicles
+                        ? response.data["vehicles"]
                         : [],
-                    starships: object_swapi?.starships
-                        ? object_swapi["starships"]
+                    starships: response.data?.starships
+                        ? response.data["starships"]
                         : [],
                     created: new Date().toISOString(),
                     edited: new Date().toISOString(),

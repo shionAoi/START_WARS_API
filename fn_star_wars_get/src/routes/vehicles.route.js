@@ -1,16 +1,16 @@
 const express = require("express");
-const PeopleService = require("../services/people.service");
 const { LanguageNotSupported, ResourceNotFoundExternalService } = require("../utils/errors");
+const VehiclesService = require("../services/vehicles.service");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
     try {
-        console.log("Route to get people");
-        const peopleService = new PeopleService(
+        console.log("Route to get vehicles");
+        const vehiclesService = new VehiclesService(
             req.app.get("db_client"),
             req.app.get("language")
         );
-        const converted = await peopleService.processPeople(req.query.lastKey);
+        const converted = await vehiclesService.processVehicles(req.query.lastKey);
         res.json(converted);
     } catch (error) {
         console.error(error);
@@ -22,15 +22,15 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:personId", async (req, res) => {
+router.get("/:vehicleId", async (req, res) => {
     try {
-        console.log("Route to get person by Id");
-        const peopleService = new PeopleService(
+        console.log("Route to get vehicle by Id");
+        const vehicleService = new VehiclesService(
             req.app.get("db_client"),
             req.app.get("language")
         );
-        const converted = await peopleService.processPerson(
-            req.params.personId
+        const converted = await vehicleService.processVehicle(
+            req.params.vehicleId
         );
         res.json(converted);
     } catch (error) {

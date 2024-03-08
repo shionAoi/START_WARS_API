@@ -2,8 +2,7 @@ const { LanguageNotSupported } = require("../utils/errors.js");
 const axios = require("axios");
 
 const { URL_SWAPI, STAR_WARS_TABLE_DB } = require("../utils/config.js");
-const ConsultsDynamoDB = require("../utils/dynamodb.client.js");
-const ConsultsAxios = require("../utils/axios.client.js");
+const ConsultsDynamoDB = require("../utils/consults.dynamo.js");
 
 class FilmsDAO {
     constructor(db_client) {
@@ -33,46 +32,54 @@ class FilmsDAO {
             // Search in database
             const item = await this.dynamo_commander.getItemById(id);
             if (item) {
-                console.log("Film found in DB");
                 return item;
             } else {
                 console.log("Getting film from API. Not in database");
                 // If not in database consult to api star wars
-                const object_swapi = await ConsultsAxios.getCommand(`${URL_SWAPI}/films/${id}`);
+                const response = await axios.get(`${URL_SWAPI}/films/${id}`, {
+                    validateStatus: (status) => {
+                        return status === 200;
+                    },
+                });
+                console.log(
+                    `Success getting response from api ${JSON.stringify(
+                        response.data
+                    )}`
+                );
                 // Translate result to put it in db
                 const film = {
                     schema_name: "films",
                     object_id: `${id}`,
-                    title: object_swapi?.title ? object_swapi["title"] : null,
-                    episode_id: object_swapi?.episode_id
-                        ? object_swapi["episode_id"]
+                    title: response.data?.title ? response.data["title"] : null,
+                    episode_id: response.data?.episode_id
+                        ? response.data["episode_id"]
                         : null,
-                    opening_crawl: object_swapi?.opening_crawl
-                        ? object_swapi["opening_crawl"]
+                    opening_crawl: response.data?.opening_crawl
+                        ? response.data["opening_crawl"]
                         : null,
-                    director: object_swapi?.director
-                        ? object_swapi["director"]
+                    director: response.data?.director
+                        ? response.data["director"]
                         : null,
-                    producer: object_swapi?.producer
-                        ? object_swapi["producer"]
+                    producer: response.data?.producer
+                        ? response.data["producer"]
                         : null,
-                    release_date: object_swapi?.release_date
-                        ? object_swapi["release_date"]
+                    release_date: response.data?.release_date
+                        ? response.data["release_date"]
                         : null,
-                    characters: object_swapi?.characters
-                        ? object_swapi["characters"]
+                    characters: response.data?.characters
+                        ? response.data["characters"]
                         : [],
-                    planets: object_swapi?.planets
-                        ? object_swapi["planets"]
+                    planets: response.data?.planets
+                        ? response.data["planets"]
                         : [],
-                    species: object_swapi?.species
-                        ? object_swapi["species"]
+                    species: response.data?.species
+                        ? response.data["species"]
                         : [],
-                    vehicles: object_swapi?.vehicles
-                        ? object_swapi["vehicles"]
+                    vehicles: response.data?.vehicles
+                        ? response.data["vehicles"]
                         : [],
-                    starships: object_swapi?.starships
-                        ? object_swapi["starships"]
+                    starships: response.data?.starships
+                        ? response.data["starships"]
                         : [],
                     created: new Date().toISOString(),
                     edited: new Date().toISOString(),

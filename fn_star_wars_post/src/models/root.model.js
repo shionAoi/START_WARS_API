@@ -1,6 +1,7 @@
-const { URL_SWAPI } = require("../utils/config.js");
+const { URL_SWAPI, AXIOS_DEFAULT_TIME } = require("../utils/config.js");
+
+const axios = require("axios");
 const { LanguageNotSupported } = require("../utils/errors.js");
-const ConsultsAxios = require("../utils/axios.client.js");
 
 class RootDAO {
     constructor(language) {
@@ -10,7 +11,17 @@ class RootDAO {
     async getRoot() {
         try {
             console.log("Get default routes from star wars api");
-            const response = await ConsultsAxios.getCommand(URL_SWAPI);
+            const response = await axios.get(URL_SWAPI, {
+                timeout: AXIOS_DEFAULT_TIME,
+                validateStatus: (status) => {
+                    return status === 200;
+                },
+            });
+            console.log(
+                `Success getting response from api ${JSON.stringify(
+                    response.data
+                )}`
+            );
             let premise;
             switch (this.language) {
                 case "es_PE":
@@ -39,7 +50,7 @@ class RootDAO {
             }
             return {
                 premise,
-                from_api: { ...response },
+                from_api: { ...response.data },
             };
         } catch (error) {
             console.error(error);
